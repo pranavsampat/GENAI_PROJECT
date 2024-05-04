@@ -1,4 +1,4 @@
-import speech_recognition as sr
+import SpeechRecognition as sr
 from googletrans import Translator
 from googletrans import Translator
 import subprocess
