@@ -1,4 +1,4 @@
-import SpeechRecognition as sr
+import speech_recognition as sr
 from googletrans import Translator
 from googletrans import Translator
 import subprocess
@@ -9,10 +9,6 @@ from googletrans import Translator
 import pywhatkit as kit
 import psutil
 import datetime
-import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 import re
 # import googlemaps
 import google.generativeai as genai
@@ -130,50 +126,6 @@ def get_weather(city):
     except Exception as e:
         print(f"Error fetching weather information: {e}")
         return "Sorry, unable to fetch weather information."
-
-def send_email(sender_email, sender_password, receiver_email, subject, message):
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, sender_password)
-
-        msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = receiver_email
-        msg['Subject'] = subject
-
-        msg.attach(MIMEText(message, 'plain'))
-
-        server.send_message(msg)
-        server.quit()
-
-        return "Email sent successfully."
-    except Exception as e:
-        print(f"Error sending email: {e}")
-        return "Sorry, unable to send email."
-    
-def get_live_match_scores():
-    try:
-        url = "https://api.cricapi.com/v1/series_info?apikey=59383ff2-1106-4309-a138-56f03535a494&id=76ae85e2-88e5-4e99-83e4-5f352108aebc"
-        querystring = {
-            "apikey": "59383ff2-1106-4309-a138-56f03535a494",
-            "type": "matches"
-        }
-        response = requests.get(url, params=querystring)
-        data = response.json()
-        today = datetime.date.today()
-        today_matches = [match for match in data["data"]["matchList"] if datetime.datetime.strptime(match["date"], "%Y-%m-%d").date() == today]
-        
-        if today_matches:
-            for match in today_matches:
-                match_name = match["name"]
-                match_status = match["status"]
-                match_venue = match["venue"]
-                print(f"{match_name}: {match_status} at {match_venue}")
-        else:
-            print("No IPL matches scheduled for today.")
-    except Exception as e:
-        print(f"Error fetching live match scores: {e}")
     
 def ask_code(intent):
         genai.configure(api_key="AIzaSyCg7wST5E-kgudcYLu7HQ3F3xu93dMUClE")
